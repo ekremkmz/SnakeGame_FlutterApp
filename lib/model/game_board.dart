@@ -66,7 +66,7 @@ class _GameBoardState extends State<GameBoard> {
 
   Widget _board() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center, 
+      mainAxisAlignment: MainAxisAlignment.center,
       children: board
           .map((e) => Column(
                 children: e.map((e) {
@@ -140,8 +140,10 @@ class _GameBoardState extends State<GameBoard> {
       head['score']++;
       board[head['x']][head['y']] = head['score'];
       BlocProvider.of<ScoreCubit>(context).increment();
+      activeDirection.lastDirection = activeDirection.direction;
       _newFood();
     } else if (targetCell > 0) {
+      activeDirection.lastDirection = activeDirection.direction;
       gameOver = true;
       return;
     } else {
@@ -149,6 +151,8 @@ class _GameBoardState extends State<GameBoard> {
       board[target['x']][target['y']] = target['score'] + 1;
       board =
           board.map((e) => e.map((e) => e > 0 ? e - 1 : e).toList()).toList();
+
+      activeDirection.lastDirection = activeDirection.direction;
     }
   }
 
