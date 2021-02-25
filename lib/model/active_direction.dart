@@ -1,5 +1,6 @@
 class ActiveDirection {
   Direction direction = Direction.right;
+  Direction lastDirection = Direction.right;
   Map<String, int> getDelta() {
     switch (this.direction) {
       case Direction.down:
