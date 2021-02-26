@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:snake_game/cubit/score_cubit.dart';
 
 import 'active_direction.dart';
+import 'animated_food.dart';
 
 class GameBoard extends StatefulWidget {
   GameBoard({Key key}) : super(key: key);
@@ -83,11 +84,7 @@ class _GameBoardState extends State<GameBoard> {
                       margin: EdgeInsets.all(1),
                     );
                   } else if (e == -1) {
-                    return Container(
-                      color: Colors.green,
-                      padding: EdgeInsets.all(width / 2 - 1),
-                      margin: EdgeInsets.all(1),
-                    );
+                    return AnimatedFood(width: width);
                   } else {
                     return Container(
                       color: Colors.grey.shade800,
