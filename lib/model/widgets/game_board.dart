@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:snake_game/cubit/score_cubit.dart';
 import 'package:snake_game/model/levelData.dart';
+import 'package:snake_game/model/widgets/animated_head.dart';
 
 import '../active_direction.dart';
 import 'animated_food.dart';
@@ -76,11 +77,7 @@ class _GameBoardState extends State<GameBoard> {
           .map((e) => Column(
                 children: e.map((e) {
                   if (e == head['score']) {
-                    return Container(
-                      color: Colors.red,
-                      padding: EdgeInsets.all(width / 2 - 1),
-                      margin: EdgeInsets.all(1),
-                    );
+                    return AnimatedHead(width: width);
                   } else if (e > 0) {
                     return Container(
                       color: Colors.redAccent,
@@ -103,7 +100,7 @@ class _GameBoardState extends State<GameBoard> {
                     );
                   } else {
                     return Container(
-                      color: Colors.grey.shade800,
+                      color: Colors.grey.shade900,
                       padding: EdgeInsets.all(width / 2 - 2),
                       margin: EdgeInsets.all(2),
                     );
