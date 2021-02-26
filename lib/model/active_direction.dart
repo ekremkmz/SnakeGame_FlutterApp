@@ -6,12 +6,12 @@ class ActiveDirection {
       case Direction.down:
         return {
           'dx': 0,
-          'dy': -1,
+          'dy': 1,
         };
       case Direction.up:
         return {
           'dx': 0,
-          'dy': 1,
+          'dy': -1,
         };
       case Direction.right:
         return {
