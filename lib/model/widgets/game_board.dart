@@ -11,6 +11,7 @@ import 'package:snake_game/model/widgets/animated_head.dart';
 import '../active_direction.dart';
 import 'animated_food.dart';
 import 'animated_portal.dart';
+import 'animated_tail.dart';
 
 class GameBoard extends StatefulWidget {
   final int selectedLevel;
@@ -78,6 +79,8 @@ class _GameBoardState extends State<GameBoard> {
                 children: e.map((e) {
                   if (e == head['score']) {
                     return AnimatedHead(width: width);
+                  } else if (e == 1) {
+                    return AnimatedTail(width: width);
                   } else if (e > 0) {
                     return Container(
                       color: Colors.redAccent,
