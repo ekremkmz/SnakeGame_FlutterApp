@@ -11,10 +11,10 @@ class AnimatedHead extends StatefulWidget {
   final int width;
 
   @override
-  _AnimatedFoodState createState() => _AnimatedFoodState();
+  _AnimatedHeadState createState() => _AnimatedHeadState();
 }
 
-class _AnimatedFoodState extends State<AnimatedHead>
+class _AnimatedHeadState extends State<AnimatedHead>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   @override

@@ -10,10 +10,10 @@ class AnimatedPortal extends StatefulWidget {
   final int width;
 
   @override
-  _AnimatedFoodState createState() => _AnimatedFoodState();
+  _AnimatedPortalState createState() => _AnimatedPortalState();
 }
 
-class _AnimatedFoodState extends State<AnimatedPortal>
+class _AnimatedPortalState extends State<AnimatedPortal>
     with TickerProviderStateMixin {
   AnimationController _controller;
   AnimationController _controller2;
