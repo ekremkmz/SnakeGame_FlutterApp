@@ -7,7 +7,7 @@ class Score extends StatefulWidget {
   _ScoreState createState() => _ScoreState();
 }
 
-class _ScoreState extends State<Score> with TickerProviderStateMixin {
+class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
   @override
