@@ -82,24 +82,24 @@ class Game extends StatelessWidget {
 
   void _checkMove(DragUpdateDetails det, ActiveDirection activeDirection) {
     if (det.delta.dx.abs() > det.delta.dy.abs()) {
-      if (det.delta.dx > 0.1) {
+      if (det.delta.dx > 0.2) {
         activeDirection.direction =
             (activeDirection.lastDirection == Direction.left)
                 ? Direction.left
                 : Direction.right;
-      } else if (det.delta.dx < -0.1) {
+      } else if (det.delta.dx < -0.2) {
         activeDirection.direction =
             (activeDirection.lastDirection == Direction.right)
                 ? Direction.right
                 : Direction.left;
       }
     } else {
-      if (det.delta.dy > 0.1) {
+      if (det.delta.dy < -0.2) {
         activeDirection.direction =
             (activeDirection.lastDirection == Direction.down)
                 ? Direction.down
                 : Direction.up;
-      } else if (det.delta.dy < -0.1) {
+      } else if (det.delta.dy > 0.2) {
         activeDirection.direction =
             (activeDirection.lastDirection == Direction.up)
                 ? Direction.up
