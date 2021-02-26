@@ -5,7 +5,7 @@ import 'package:snake_game/cubit/score_cubit.dart';
 
 import 'cubit/screen_cubit.dart';
 import 'model/active_direction.dart';
-import 'model/game.dart';
+import 'model/widgets/game.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
