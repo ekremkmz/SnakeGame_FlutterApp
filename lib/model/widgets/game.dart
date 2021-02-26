@@ -32,17 +32,27 @@ class Game extends StatelessWidget {
 
   Widget _startgame(BuildContext context) {
     return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: FlatButton(
-          padding: EdgeInsets.fromLTRB(100, 50, 100, 50),
-          color: Colors.black,
-          textColor: Colors.white,
-          onPressed: BlocProvider.of<ScreenCubit>(context, listen: false).start,
-          child: Text(
-            "Start",
-            style: TextStyle(fontSize: 32),
-          ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _startButton(context),
+          //_levelSelector(),
+        ],
+      ),
+    );
+  }
+
+  Widget _startButton(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(50),
+      child: FlatButton(
+        padding: EdgeInsets.fromLTRB(100, 50, 100, 50),
+        color: Colors.black,
+        textColor: Colors.white,
+        onPressed: BlocProvider.of<ScreenCubit>(context, listen: false).start,
+        child: Text(
+          "Start",
+          style: TextStyle(fontSize: 32),
         ),
       ),
     );
@@ -61,7 +71,7 @@ class Game extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GameBoard(),
+              GameBoard(2),
               Score(),
             ],
           ),

@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:snake_game/cubit/score_cubit.dart';
+import 'package:snake_game/model/levelData.dart';
 
 import '../active_direction.dart';
 import 'animated_food.dart';
+import 'animated_portal.dart';
 
 class GameBoard extends StatefulWidget {
-  GameBoard({Key key}) : super(key: key);
+  final int selectedLevel;
+  GameBoard(this.selectedLevel, {Key key}) : super(key: key);
 
   @override
   _GameBoardState createState() => _GameBoardState();
@@ -19,7 +22,8 @@ class GameBoard extends StatefulWidget {
 class _GameBoardState extends State<GameBoard> {
   int width;
   List<List<int>> board;
-  var head;
+  Map<String, int> head;
+  Map<String, String> portals;
   bool gameOver;
 
   @override
@@ -85,6 +89,18 @@ class _GameBoardState extends State<GameBoard> {
                     );
                   } else if (e == -1) {
                     return AnimatedFood(width: width);
+                  } else if (e == -2) {
+                    return Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        Container(
+                          color: Colors.black,
+                          padding: EdgeInsets.all(width / 2 - 2),
+                          margin: EdgeInsets.all(2),
+                        ),
+                        AnimatedPortal(width: width)
+                      ],
+                    );
                   } else {
                     return Container(
                       color: Colors.grey.shade800,
@@ -99,12 +115,10 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void restart() {
-    board = List.empty(growable: true);
-    for (var i = 0; i < 20; i++) {
-      board.add(List.filled(20, 0));
-    }
-    board[5][5] = 1;
-    head = {'x': 5, 'y': 5, 'score': 1};
+    LevelData levelData = Provider.of<LevelData>(context, listen: false);
+    board = levelData.getLevelData(widget.selectedLevel);
+    head = levelData.head;
+    portals = levelData.portals ?? {};
     gameOver = false;
     BlocProvider.of<ScoreCubit>(context).restart();
     _newFood();
@@ -131,8 +145,10 @@ class _GameBoardState extends State<GameBoard> {
       'score': head['score'],
     };
     int targetCell = board[target['x']][target['y']];
-
-    if (targetCell == -1) {
+    if (targetCell == 0) {
+      _moveHead(target);
+      activeDirection.lastDirection = activeDirection.direction;
+    } else if (targetCell == -1) {
       head = target;
       head['score']++;
       board[head['x']][head['y']] = head['score'];
@@ -143,19 +159,31 @@ class _GameBoardState extends State<GameBoard> {
       activeDirection.lastDirection = activeDirection.direction;
       gameOver = true;
       return;
-    } else {
-      head = target;
-      board[target['x']][target['y']] = target['score'] + 1;
-      board =
-          board.map((e) => e.map((e) => e > 0 ? e - 1 : e).toList()).toList();
-
+    } else if (targetCell == -2) {
+      String portalLoc = target['x'].toString() + ',' + target['y'].toString();
+      String portalExit = portals[portalLoc];
+      List<int> portalExitCoord =
+          portalExit.split(',').map((e) => int.parse(e)).toList();
+      target = {
+        'x': portalExitCoord[0] + delta['dx'],
+        'y': portalExitCoord[1] + delta['dy'],
+        'score': head['score']
+      };
+      _moveHead(target);
       activeDirection.lastDirection = activeDirection.direction;
     }
   }
 
+  void _moveHead(Map<String, int> target) {
+    head = target;
+    board[target['x']][target['y']] = target['score'] + 1;
+    board = board.map((e) => e.map((e) => e > 0 ? e - 1 : e).toList()).toList();
+  }
+
   void _newFood() {
     bool foodPlaced = false;
-    int newFoodLocation = Random().nextInt(400 - head['score']);
+    int newFoodLocation =
+        Random().nextInt(400 - head['score'] - portals?.length);
     board = board
         .map((e) => e.map((cell) {
               if (!foodPlaced) {
