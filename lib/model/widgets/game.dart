@@ -71,7 +71,7 @@ class Game extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GameBoard(2),
+              GameBoard(2, MediaQuery.of(context).size.width ~/ 20),
               Score(),
             ],
           ),

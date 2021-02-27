@@ -1,29 +1,29 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:snake_game/cubit/score_cubit.dart';
-import 'package:snake_game/model/levelData.dart';
-import 'package:snake_game/model/widgets/animated_head.dart';
-
+import '../../cubit/cell_cubit.dart';
+import '../../cubit/score_cubit.dart';
+import '../../model/levelData.dart';
 import '../active_direction.dart';
-import 'animated_food.dart';
-import 'animated_portal.dart';
-import 'animated_tail.dart';
 
 class GameBoard extends StatefulWidget {
+  final int cellWidth;
   final int selectedLevel;
-  GameBoard(this.selectedLevel, {Key key}) : super(key: key);
+  GameBoard(
+    this.selectedLevel,
+    this.cellWidth, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _GameBoardState createState() => _GameBoardState();
 }
 
 class _GameBoardState extends State<GameBoard> {
-  int width;
   List<List<int>> board;
+  List<List<CellCubit>> cells;
   Map<String, int> head;
   Map<String, String> portals;
   bool gameOver;
@@ -36,7 +36,6 @@ class _GameBoardState extends State<GameBoard> {
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width ~/ 20;
     return Stack(
       alignment: AlignmentDirectional.center,
       children: [
@@ -74,40 +73,20 @@ class _GameBoardState extends State<GameBoard> {
   Widget _board() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: board
+      children: cells
           .map((e) => Column(
                 children: e.map((e) {
-                  if (e == head['score']) {
-                    return AnimatedHead(width: width);
-                  } else if (e == 1) {
-                    return AnimatedTail(width: width);
-                  } else if (e > 0) {
-                    return Container(
-                      color: Colors.redAccent,
-                      padding: EdgeInsets.all(width / 2 - 1),
-                      margin: EdgeInsets.all(1),
-                    );
-                  } else if (e == -1) {
-                    return AnimatedFood(width: width);
-                  } else if (e == -2) {
-                    return Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        Container(
-                          color: Colors.black,
-                          padding: EdgeInsets.all(width / 2 - 2),
-                          margin: EdgeInsets.all(2),
-                        ),
-                        AnimatedPortal(width: width)
-                      ],
-                    );
-                  } else {
-                    return Container(
-                      color: Colors.grey.shade900,
-                      padding: EdgeInsets.all(width / 2 - 2),
-                      margin: EdgeInsets.all(2),
-                    );
-                  }
+                  return BlocBuilder<CellCubit, CellState>(
+                    cubit: e,
+                    builder: (BuildContext context, state) {
+                      return state;
+                    },
+                    buildWhen: (prev, curr) {
+                      return (prev.runtimeType == curr.runtimeType)
+                          ? false
+                          : true;
+                    },
+                  );
                 }).toList(),
               ))
           .toList(),
@@ -117,7 +96,11 @@ class _GameBoardState extends State<GameBoard> {
   void restart() {
     LevelData levelData = Provider.of<LevelData>(context, listen: false);
     board = levelData.getLevelData(widget.selectedLevel);
+    cells = List.generate(
+        20, (i) => List.generate(20, (j) => CellCubit(widget.cellWidth)));
+
     head = levelData.head;
+    _updateCells();
     portals = levelData.portals ?? {};
     gameOver = false;
     BlocProvider.of<ScoreCubit>(context, listen: false).restart();
@@ -130,11 +113,20 @@ class _GameBoardState extends State<GameBoard> {
 
   void startGame() {
     Timer.periodic(Duration(milliseconds: 100), (Timer timer) {
-      setState(_updateBoard);
+      _updateBoard();
+      _updateCells();
       if (gameOver) {
         timer.cancel();
       }
     });
+  }
+
+  void _updateCells() {
+    for (var i = 0; i < 20; i++) {
+      for (var j = 0; j < 20; j++) {
+        cells[i][j].setCell(board[i][j], head['score']);
+      }
+    }
   }
 
   void _updateBoard() {
@@ -159,7 +151,9 @@ class _GameBoardState extends State<GameBoard> {
       _newFood();
     } else if (targetCell > 1) {
       activeDirection.lastDirection = activeDirection.direction;
-      gameOver = true;
+      setState(() {
+        gameOver = true;
+      });
       return;
     } else if (targetCell == -2) {
       String portalLoc = target['x'].toString() + ',' + target['y'].toString();
