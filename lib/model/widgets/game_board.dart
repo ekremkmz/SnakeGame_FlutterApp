@@ -147,7 +147,7 @@ class _GameBoardState extends State<GameBoard> {
       'score': head['score'],
     };
     int targetCell = board[target['x']][target['y']];
-    if (targetCell == 0) {
+    if (targetCell == 0 || targetCell == 1) {
       _moveHead(target);
       activeDirection.lastDirection = activeDirection.direction;
     } else if (targetCell == -1) {
@@ -157,7 +157,7 @@ class _GameBoardState extends State<GameBoard> {
       BlocProvider.of<ScoreCubit>(context).increment();
       activeDirection.lastDirection = activeDirection.direction;
       _newFood();
-    } else if (targetCell > 0) {
+    } else if (targetCell > 1) {
       activeDirection.lastDirection = activeDirection.direction;
       gameOver = true;
       return;
