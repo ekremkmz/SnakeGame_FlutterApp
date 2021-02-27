@@ -24,13 +24,18 @@ class GameBoard extends StatefulWidget {
 class _GameBoardState extends State<GameBoard> {
   List<List<int>> board;
   List<List<CellCubit>> cells;
+  Map<String, int> delta;
   Map<String, int> head;
+  Map<String, int> target;
   Map<String, String> portals;
+
+  ActiveDirection activeDirection;
   bool gameOver;
 
   @override
   void initState() {
     super.initState();
+    activeDirection = Provider.of<ActiveDirection>(context, listen: false);
     restart();
   }
 
@@ -130,14 +135,16 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void _updateBoard() {
-    ActiveDirection activeDirection =
-        Provider.of<ActiveDirection>(context, listen: false);
-    Map<String, int> delta = activeDirection.getDelta();
-    Map<String, int> target = {
+    delta = activeDirection.getDelta();
+    target = {
       'x': (head['x'] + delta['dx']) % 20,
       'y': (head['y'] + delta['dy']) % 20,
       'score': head['score'],
     };
+    _cellAction();
+  }
+
+  void _cellAction() {
     int targetCell = board[target['x']][target['y']];
     if (targetCell == 0 || targetCell == 1) {
       _moveHead(target);
@@ -146,7 +153,7 @@ class _GameBoardState extends State<GameBoard> {
       head = target;
       head['score']++;
       board[head['x']][head['y']] = head['score'];
-      BlocProvider.of<ScoreCubit>(context).increment();
+      BlocProvider.of<ScoreCubit>(context, listen: false).increment();
       activeDirection.lastDirection = activeDirection.direction;
       _newFood();
     } else if (targetCell > 1) {
@@ -165,7 +172,7 @@ class _GameBoardState extends State<GameBoard> {
         'y': portalExitCoord[1] + delta['dy'],
         'score': head['score']
       };
-      _moveHead(target);
+      _cellAction();
       activeDirection.lastDirection = activeDirection.direction;
     }
   }
