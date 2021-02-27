@@ -42,6 +42,7 @@ class _AnimatedPortalState extends State<AnimatedPortal>
   @override
   void dispose() {
     _controller.dispose();
+    _controller2.dispose();
     super.dispose();
   }
 
@@ -52,8 +53,8 @@ class _AnimatedPortalState extends State<AnimatedPortal>
       child: Stack(alignment: AlignmentDirectional.center, children: [
         Container(
           color: Colors.blue.shade900,
-            padding: EdgeInsets.all(2 * widget.width / 5 -
-                _controller2.value * (1 * widget.width / 10)),
+          padding: EdgeInsets.all(2 * widget.width / 5 -
+              _controller2.value * (1 * widget.width / 10)),
         ),
         Transform.rotate(
           angle: math.pi / 4,
