@@ -120,7 +120,9 @@ class _GameBoardState extends State<GameBoard> {
     head = levelData.head;
     portals = levelData.portals ?? {};
     gameOver = false;
-    BlocProvider.of<ScoreCubit>(context).restart();
+    BlocProvider.of<ScoreCubit>(context, listen: false).restart();
+    Provider.of<ActiveDirection>(context, listen: false).direction =
+        Direction.right;
     _newFood();
 
     startGame();
