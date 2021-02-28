@@ -18,16 +18,17 @@ class GameBoard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _GameBoardState createState() => _GameBoardState();
+  GameBoardState createState() => GameBoardState();
 }
 
-class _GameBoardState extends State<GameBoard> {
+class GameBoardState extends State<GameBoard> {
   List<List<int>> board;
   List<List<CellCubit>> cells;
   Map<String, int> delta;
   Map<String, int> head;
   Map<String, int> target;
   Map<String, String> portals;
+  LevelData levelData;
 
   ActiveDirection activeDirection;
   bool gameOver;
@@ -36,6 +37,7 @@ class _GameBoardState extends State<GameBoard> {
   void initState() {
     super.initState();
     activeDirection = Provider.of<ActiveDirection>(context, listen: false);
+    levelData = Provider.of<LevelData>(context, listen: false);
     restart();
   }
 
@@ -83,7 +85,7 @@ class _GameBoardState extends State<GameBoard> {
                 children: e.map((e) {
                   return BlocBuilder<CellCubit, CellState>(
                     cubit: e,
-                    builder: (BuildContext context, state) {
+                    builder: (context, state) {
                       return state;
                     },
                     buildWhen: (prev, curr) {
@@ -99,10 +101,11 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void restart() {
-    LevelData levelData = Provider.of<LevelData>(context, listen: false);
     board = levelData.getLevelData(widget.selectedLevel);
     cells = List.generate(
-        20, (i) => List.generate(20, (j) => CellCubit(widget.cellWidth)));
+        20,
+        (i) => List.generate(
+            20, (j) => CellCubit(widget.cellWidth, i, j, levelData, this)));
 
     head = levelData.head;
     _updateCells();
@@ -111,7 +114,7 @@ class _GameBoardState extends State<GameBoard> {
     BlocProvider.of<ScoreCubit>(context, listen: false).restart();
     Provider.of<ActiveDirection>(context, listen: false).direction =
         Direction.right;
-    _newFood();
+    newFood();
 
     startGame();
   }
@@ -130,6 +133,7 @@ class _GameBoardState extends State<GameBoard> {
     for (var i = 0; i < 20; i++) {
       for (var j = 0; j < 20; j++) {
         cells[i][j].setCell(board[i][j], head['score']);
+        activeDirection.lastDirection = activeDirection.direction;
       }
     }
   }
@@ -141,49 +145,14 @@ class _GameBoardState extends State<GameBoard> {
       'y': (head['y'] + delta['dy']) % 20,
       'score': head['score'],
     };
-    _cellAction();
+    doTargetCellAction();
   }
 
-  void _cellAction() {
-    int targetCell = board[target['x']][target['y']];
-    if (targetCell == 0 || targetCell == 1) {
-      _moveHead(target);
-      activeDirection.lastDirection = activeDirection.direction;
-    } else if (targetCell == -1) {
-      head = target;
-      head['score']++;
-      board[head['x']][head['y']] = head['score'];
-      BlocProvider.of<ScoreCubit>(context, listen: false).increment();
-      activeDirection.lastDirection = activeDirection.direction;
-      _newFood();
-    } else if (targetCell > 1) {
-      activeDirection.lastDirection = activeDirection.direction;
-      setState(() {
-        gameOver = true;
-      });
-      return;
-    } else if (targetCell == -2) {
-      String portalLoc = target['x'].toString() + ',' + target['y'].toString();
-      String portalExit = portals[portalLoc];
-      List<int> portalExitCoord =
-          portalExit.split(',').map((e) => int.parse(e)).toList();
-      target = {
-        'x': portalExitCoord[0] + delta['dx'],
-        'y': portalExitCoord[1] + delta['dy'],
-        'score': head['score']
-      };
-      _cellAction();
-      activeDirection.lastDirection = activeDirection.direction;
-    }
+  void doTargetCellAction() {
+      cells[target['x']][target['y']].state.cellAction();
   }
 
-  void _moveHead(Map<String, int> target) {
-    head = target;
-    board[target['x']][target['y']] = target['score'] + 1;
-    board = board.map((e) => e.map((e) => e > 0 ? e - 1 : e).toList()).toList();
-  }
-
-  void _newFood() {
+  void newFood() {
     bool foodPlaced = false;
     int newFoodLocation =
         Random().nextInt(400 - head['score'] - portals?.length);
