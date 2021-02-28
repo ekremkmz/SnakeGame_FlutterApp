@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:snake_game/cubit/screen_cubit.dart';
-
+import '../../cubit/screen_cubit.dart';
+import '../../model/widgets/timer_widget.dart';
 import '../active_direction.dart';
 import 'game_board.dart';
 import 'score.dart';
@@ -71,6 +71,7 @@ class Game extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              TimerWidget(MediaQuery.of(context).size.height ~/ 8),
               GameBoard(2, MediaQuery.of(context).size.width ~/ 20),
               Score(),
             ],
