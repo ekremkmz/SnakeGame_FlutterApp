@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:snake_game/cubit/timer_cubit.dart';
 import '../../cubit/cell_cubit.dart';
 import '../../cubit/score_cubit.dart';
 import '../../model/levelData.dart';
@@ -115,17 +116,24 @@ class GameBoardState extends State<GameBoard> {
     Provider.of<ActiveDirection>(context, listen: false).direction =
         Direction.right;
     newFood();
-
     startGame();
   }
 
   void startGame() {
+    Provider.of<TimerCubit>(context, listen: false).startTimer();
     Timer.periodic(Duration(milliseconds: 100), (Timer timer) {
       _updateBoard();
       _updateCells();
       if (gameOver) {
         timer.cancel();
       }
+    });
+  }
+
+  void gameover() {
+    Provider.of<TimerCubit>(context, listen: false).stopTimer();
+    setState(() {
+      gameOver = true;
     });
   }
 
@@ -149,7 +157,7 @@ class GameBoardState extends State<GameBoard> {
   }
 
   void doTargetCellAction() {
-      cells[target['x']][target['y']].state.cellAction();
+    cells[target['x']][target['y']].state.cellAction();
   }
 
   void newFood() {

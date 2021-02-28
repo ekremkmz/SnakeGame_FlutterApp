@@ -125,10 +125,7 @@ class SnakeCell extends CellState {
   @override
   _SnakeCellState createState() => _SnakeCellState();
   void cellAction() {
-    // ignore: invalid_use_of_protected_member
-    gameBoardState.setState(() {
-      gameBoardState.gameOver = true;
-    });
+    gameBoardState.gameover();
   }
 }
 
