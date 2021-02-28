@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:snake_game/cubit/score_cubit.dart';
+import 'package:snake_game/cubit/timer_cubit.dart';
 import 'package:snake_game/model/levelData.dart';
 
 import 'cubit/screen_cubit.dart';
@@ -21,10 +22,11 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<ScreenCubit>(create: (context) => ScreenCubit()),
         BlocProvider<ScoreCubit>(create: (context) => ScoreCubit()),
+        BlocProvider<TimerCubit>(create: (_) => TimerCubit()),
       ],
       child: MultiProvider(
         providers: [
-          Provider<ActiveDirection>(create: (context) => ActiveDirection()),
+          Provider<ActiveDirection>(create: (_) => ActiveDirection()),
           Provider<LevelData>(create: (_) => LevelData()),
         ],
         child: MaterialApp(
