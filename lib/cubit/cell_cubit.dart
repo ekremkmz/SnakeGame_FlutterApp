@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:snake_game/cubit/score_cubit.dart';
 import 'package:snake_game/model/levelData.dart';
 import 'package:snake_game/model/widgets/game_board.dart';
