@@ -45,14 +45,15 @@ class Game extends StatelessWidget {
   Widget _startButton(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(50),
-      child: FlatButton(
-        padding: EdgeInsets.fromLTRB(100, 50, 100, 50),
-        color: Colors.black,
-        textColor: Colors.white,
+      child: TextButton(
         onPressed: BlocProvider.of<ScreenCubit>(context, listen: false).start,
-        child: Text(
-          "Start",
-          style: TextStyle(fontSize: 32),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(100, 50, 100, 50),
+          color: Colors.black,
+          child: Text(
+            "Start",
+            style: TextStyle(fontSize: 32, color: Colors.white),
+          ),
         ),
       ),
     );
