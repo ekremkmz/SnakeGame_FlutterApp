@@ -20,144 +20,112 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          ' ',
-          style: TextStyle(
-              fontFamily: 'SevenSegment',
-              color: Colors.white,
-              fontSize: widget.width.toDouble()),
-        ),
-        Expanded(
-          child: Row(
-            children: [
-              BlocBuilder<TimerCubit, Time>(
-                  buildWhen: (prev, cur) => prev.minute != cur.minute,
-                  builder: (context, state) {
-                    return Expanded(
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          (state.minute ~/ 10).toString(),
-                          style: TextStyle(
-                              fontFamily: 'SevenSegment',
-                              color: Colors.white,
-                              fontSize: widget.width.toDouble()),
-                        ),
-                      ),
-                    );
-                  }),
-              BlocBuilder<TimerCubit, Time>(
-                  buildWhen: (prev, cur) => prev.minute != cur.minute,
-                  builder: (context, state) {
-                    return Expanded(
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          (state.minute % 10).toString(),
-                          style: TextStyle(
-                              fontFamily: 'SevenSegment',
-                              color: Colors.white,
-                              fontSize: widget.width.toDouble()),
-                        ),
-                      ),
-                    );
-                  }),
-            ],
-          ),
-        ),
-        Text(
-          ':',
-          style: TextStyle(
-              fontFamily: 'SevenSegment',
-              color: Colors.white,
-              fontSize: widget.width.toDouble()),
-        ),
-        Expanded(
-          child: Row(
-            children: [
-              BlocBuilder<TimerCubit, Time>(
-                  buildWhen: (prev, cur) => prev.second != cur.second,
-                  builder: (context, state) {
-                    return Expanded(
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          (state.second ~/ 10).toString(),
-                          style: TextStyle(
-                              fontFamily: 'SevenSegment',
-                              color: Colors.white,
-                              fontSize: widget.width.toDouble()),
-                        ),
-                      ),
-                    );
-                  }),
-              BlocBuilder<TimerCubit, Time>(
-                  buildWhen: (prev, cur) => prev.second != cur.second,
-                  builder: (context, state) {
-                    return Expanded(
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          (state.second % 10).toString(),
-                          style: TextStyle(
-                              fontFamily: 'SevenSegment',
-                              color: Colors.white,
-                              fontSize: widget.width.toDouble()),
-                        ),
-                      ),
-                    );
-                  }),
-            ],
-          ),
-        ),
-        Text(
-          ':',
-          style: TextStyle(
-              fontFamily: 'SevenSegment',
-              color: Colors.white,
-              fontSize: widget.width.toDouble()),
-        ),
-        Expanded(
-          child: Row(
-            children: [
-              BlocBuilder<TimerCubit, Time>(builder: (context, state) {
-                return Expanded(
-                  child: Container(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      (state.millisecond ~/ 10).toString(),
-                      style: TextStyle(
-                          fontFamily: 'SevenSegment',
-                          color: Colors.white,
-                          fontSize: widget.width.toDouble()),
-                    ),
+        BlocBuilder<TimerCubit, Time>(
+            buildWhen: (prev, cur) => prev.minute != cur.minute,
+            builder: (context, state) {
+              return Expanded(
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    (state.minute ~/ 10).toString(),
+                    style: TextStyle(
+                        fontFamily: 'SevenSegment',
+                        color: Colors.white,
+                        fontSize: widget.width.toDouble()),
                   ),
-                );
-              }),
-              BlocBuilder<TimerCubit, Time>(builder: (context, state) {
-                return Expanded(
-                  child: Container(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      (state.millisecond % 10).toString(),
-                      style: TextStyle(
-                          fontFamily: 'SevenSegment',
-                          color: Colors.white,
-                          fontSize: widget.width.toDouble()),
-                    ),
+                ),
+              );
+            }),
+        BlocBuilder<TimerCubit, Time>(
+            buildWhen: (prev, cur) => prev.minute != cur.minute,
+            builder: (context, state) {
+              return Expanded(
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    (state.minute % 10).toString(),
+                    style: TextStyle(
+                        fontFamily: 'SevenSegment',
+                        color: Colors.white,
+                        fontSize: widget.width.toDouble()),
                   ),
-                );
-              }),
-            ],
-          ),
-        ),
+                ),
+              );
+            }),
         Text(
-          ' ',
+          "'",
           style: TextStyle(
               fontFamily: 'SevenSegment',
               color: Colors.white,
               fontSize: widget.width.toDouble()),
         ),
+        BlocBuilder<TimerCubit, Time>(
+            buildWhen: (prev, cur) => prev.second != cur.second,
+            builder: (context, state) {
+              return Expanded(
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    (state.second ~/ 10).toString(),
+                    style: TextStyle(
+                        fontFamily: 'SevenSegment',
+                        color: Colors.white,
+                        fontSize: widget.width.toDouble()),
+                  ),
+                ),
+              );
+            }),
+        BlocBuilder<TimerCubit, Time>(
+            buildWhen: (prev, cur) => prev.second != cur.second,
+            builder: (context, state) {
+              return Expanded(
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    (state.second % 10).toString(),
+                    style: TextStyle(
+                        fontFamily: 'SevenSegment',
+                        color: Colors.white,
+                        fontSize: widget.width.toDouble()),
+                  ),
+                ),
+              );
+            }),
+        Text(
+          "'",
+          style: TextStyle(
+              fontFamily: 'SevenSegment',
+              color: Colors.white,
+              fontSize: widget.width.toDouble()),
+        ),
+        BlocBuilder<TimerCubit, Time>(builder: (context, state) {
+          return Expanded(
+            child: Container(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                (state.millisecond ~/ 10).toString(),
+                style: TextStyle(
+                    fontFamily: 'SevenSegment',
+                    color: Colors.white,
+                    fontSize: widget.width.toDouble()),
+              ),
+            ),
+          );
+        }),
+        BlocBuilder<TimerCubit, Time>(builder: (context, state) {
+          return Expanded(
+            child: Container(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                (state.millisecond % 10).toString(),
+                style: TextStyle(
+                    fontFamily: 'SevenSegment',
+                    color: Colors.white,
+                    fontSize: widget.width.toDouble()),
+              ),
+            ),
+          );
+        }),
       ],
     );
   }
