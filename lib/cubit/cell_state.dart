@@ -1,6 +1,5 @@
 part of 'cell_cubit.dart';
 
-@immutable
 abstract class CellState extends StatefulWidget {
   final int width;
   final int coordX;
@@ -13,7 +12,9 @@ abstract class CellState extends StatefulWidget {
     this.gameBoardState, {
     Key key,
   }) : super(key: key);
-  void cellAction();
+  void cellAction() {
+    gameBoardState.gameover();
+  }
 }
 
 class EmptyCell extends CellState {
@@ -21,7 +22,7 @@ class EmptyCell extends CellState {
       : super(width, coordX, coordY, gameBoardState);
 
   @override
-  _EmptyCellState createState() => _EmptyCellState();
+  createState() => _EmptyCellState();
   @override
   void cellAction() {
     gameBoardState.head = gameBoardState.target;
@@ -50,9 +51,6 @@ class HeadCell extends CellState {
 
   @override
   _HeadCellState createState() => _HeadCellState();
-
-  @override
-  void cellAction() {}
 }
 
 class _HeadCellState extends State<HeadCell> {
@@ -62,15 +60,12 @@ class _HeadCellState extends State<HeadCell> {
   }
 }
 
-class TailCell extends CellState {
+class TailCell extends EmptyCell {
   TailCell(int width, int coordX, int coordY, GameBoardState gameBoardState)
       : super(width, coordX, coordY, gameBoardState);
 
   @override
   _TailCellState createState() => _TailCellState();
-
-  @override
-  void cellAction() {}
 }
 
 class _TailCellState extends State<TailCell> {
@@ -124,9 +119,6 @@ class SnakeCell extends CellState {
 
   @override
   _SnakeCellState createState() => _SnakeCellState();
-  void cellAction() {
-    gameBoardState.gameover();
-  }
 }
 
 class _SnakeCellState extends State<SnakeCell> {
